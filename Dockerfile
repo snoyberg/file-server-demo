@@ -1,6 +1,11 @@
 FROM ubuntu:16.04
 MAINTAINER Michael Snoyman
 
+# Get dumb-init to avoid Ctrl-C issues. See:
+# http://engineeringblog.yelp.com/2016/01/dumb-init-an-init-for-docker.html
+ADD https://github.com/Yelp/dumb-init/releases/download/v1.1.3/dumb-init_1.1.3_amd64 /usr/local/bin/dumb-init
+RUN chmod +x /usr/local/bin/dumb-init
+
 # Set up Haskell Stack, the Haskell build tool.
 # Stack is the only dependency we have to run our application.
 # Once available, it will grab everything else we need
@@ -24,6 +29,6 @@ RUN /usr/local/bin/file-server sanity
 
 # We're all ready, now just configure our image to run the server on
 # launch from the correct working directory.
-CMD /usr/local/bin/file-server
+CMD ["/usr/local/bin/dumb-init", "/usr/local/bin/file-server"]
 WORKDIR /workdir
 EXPOSE 8080
