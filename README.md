@@ -319,8 +319,7 @@ a working directory to store files in, and run all subsequent commands
 as the new user.
 
 ```dockerfile
-RUN useradd -m www && mkdir -p /workdir && chown www /workdir
-USER www
+RUN /usr/local/bin/file-server sanity
 ```
 
 As I mentioned above, that initial run of the server takes a long
@@ -330,19 +329,13 @@ happen, we run our program once with the `sanity` command line
 argument, so that it immediately exits after successfully starting up.
 
 ```dockerfile
-RUN /usr/local/bin/file-server sanity
-```
-
-Finally, we use `CMD`, `WORKDIR`, and `EXPOSE` to make it easier to
-run this:
-
-```dockerfile
 CMD /usr/local/bin/file-server
 WORKDIR /workdir
 EXPOSE 8080
 ```
 
-This Docker image is available on Docker Hub, so if you'd like to try
+Finally, we use `CMD`, `WORKDIR`, and `EXPOSE` to make it easier to
+run. This Docker image is available on Docker Hub, so if you'd like to try
 it out without doing a full build on your local machine:
 
 ```shell
