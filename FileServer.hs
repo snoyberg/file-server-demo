@@ -3,7 +3,7 @@
     --resolver lts-6.11
     --install-ghc
     runghc
-    --package lucid
+    --package shakespeare
     --package wai-app-static
     --package wai-extra
     --package warp
@@ -20,11 +20,14 @@
 -- Enable the OverloadedStrings extension, a commonly used feature.
 {-# LANGUAGE OverloadedStrings #-}
 
+-- We use the QuasiQuotes to embed Hamlet HTML templates inside
+-- our source file.
+{-# LANGUAGE QuasiQuotes #-}
+
 -- Import the various modules that we'll use in our code.
 import qualified Data.ByteString.Char8          as S8
 import qualified Data.ByteString.Lazy           as L
 import           Data.Functor.Identity
-import           Lucid
 import           Network.HTTP.Types
 import           Network.Wai
 import           Network.Wai.Application.Static
@@ -32,6 +35,8 @@ import           Network.Wai.Handler.Warp
 import           Network.Wai.Parse
 import           System.Environment
 import           System.FilePath
+import           Text.Blaze.Html.Renderer.Utf8
+import           Text.Hamlet
 
 -- | Entrypoint to our application
 main :: IO ()
@@ -61,7 +66,7 @@ app req send =
         [] -> send $ responseBuilder
                 status200
                 [("Content-Type", "text/html; charset=utf-8")]
-                (runIdentity $ execHtmlT homepage)
+                (renderHtmlBuilder homepage)
 
         -- "/browse/...": use the file server to allow directory
         -- listings and downloading files
@@ -83,29 +88,22 @@ app req send =
 
 -- | Create an HTML page which links to the /browse URL, and allows
 -- for a file upload
-homepage :: Html ()
-homepage = do
-    doctype_
-    html_ $ do
-        head_ $ do
-            title_ "File server"
-        body_ $ do
-            h1_ "File server"
-            p_ $ a_ [href_ "/browse/"] "Browse available files"
+homepage :: Html
+homepage = [shamlet|
+$doctype 5
+<html>
+    <head>
+        <title>File server
+    <body>
+        <h1>File server
+        <p>
+            <a href=/browse/>Browse available files
 
-            form_
-                [ method_ "POST"
-                , action_ "/upload"
-                , enctype_ "multipart/form-data"
-                ] $ do
-                    p_ "Upload a new file"
-                    input_
-                        [ type_ "file"
-                        , name_ "file"
-                        ]
-                    input_
-                        [ type_ "submit"
-                        ]
+        <form method=POST action=/upload enctype=multipart/form-data>
+            <p>Upload a new file
+            <input type=file name=file>
+            <input type=submit>
+|]
 
 -- | Use the standard file server settings to serve files from the
 -- current directory

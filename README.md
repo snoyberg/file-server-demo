@@ -86,7 +86,7 @@ code:
     --resolver lts-6.11
     --install-ghc
     runghc
-    --package lucid
+    --package shakespeare
     --package wai-app-static
     --package wai-extra
     --package warp
@@ -192,43 +192,37 @@ concepts, real world code is typically even easier than this!
 
 An area that Haskell really excels at is Domain Specific Languages
 (DSLs). We're going to use the
-[Lucid library](https://www.stackage.org/package/lucid) to for HTML
-templating. There are many other options in the Haskell world favoring
-other syntax, such as
-[Hamlet](http://www.yesodweb.com/book/shakespearean-templates), plus
-implementations of language-agnostic templates, like
+[Hamlet](http://www.yesodweb.com/book/shakespearean-templates) for
+HTML templating. There are many other options in the Haskell world
+favoring other syntax, such as
+[Lucid library](https://www.stackage.org/package/lucid) (which
+provides a Haskell-based DSL), plus implementations of
+language-agnostic templates, like
 [mustache](https://www.stackage.org/package/mustache).
 
-Here's what our HTML page looks like in Lucid:
+Here's what our HTML page looks like in Hamlet:
 
 ``` haskell
 homepage :: Html ()
-homepage = do
-    doctype_
-    html_ $ do
-        head_ $ do
-            title_ "File server"
-        body_ $ do
-            h1_ "File server"
-            p_ $ a_ [href_ "/browse/"] "Browse available files"
+homepage = [shamlet|
+$doctype 5
+<html>
+    <head>
+        <title>File server
+    <body>
+        <h1>File server
+        <p>
+            <a href=/browse/>Browse available files
 
-            form_
-                [ method_ "POST"
-                , action_ "/upload"
-                , enctype_ "multipart/form-data"
-                ] $ do
-                    p_ "Upload a new file"
-                    input_
-                        [ type_ "file"
-                        , name_ "file"
-                        ]
-                    input_
-                        [ type_ "submit"
-                        ]
+        <form method=POST action=/upload enctype=multipart/form-data>
+            <p>Upload a new file
+            <input type=file name=file>
+            <input type=submit>
+|]
 ```
 
-`do`-notation and significant whitespace makes it easy to embed HTML
-within our Haskell code.
+Note that Hamlet - like Haskell itself - uses significant whitespace
+and indentation to denote nesting.
 
 ### The rest
 
