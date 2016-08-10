@@ -288,6 +288,16 @@ MAINTAINER Michael Snoyman
 Nothing too interesting...
 
 ```dockerfile
+ADD https://github.com/Yelp/dumb-init/releases/download/v1.1.3/dumb-init_1.1.3_amd64 /usr/local/bin/dumb-init
+RUN chmod +x /usr/local/bin/dumb-init
+```
+
+While interesting, this isn't Haskell-specific. We're just using an
+init process to get proper handling for signals. For more information,
+see
+[dumb-init's announcement blog post](http://engineeringblog.yelp.com/2016/01/dumb-init-an-init-for-docker.html).
+
+```dockerfile
 ADD https://get.haskellstack.org/get-stack.sh /usr/local/bin/
 RUN sh /usr/local/bin/get-stack.sh
 ```
@@ -329,7 +339,7 @@ happen, we run our program once with the `sanity` command line
 argument, so that it immediately exits after successfully starting up.
 
 ```dockerfile
-CMD /usr/local/bin/file-server
+CMD ["/usr/local/bin/dumb-init", "/usr/local/bin/file-server"]
 WORKDIR /workdir
 EXPOSE 8080
 ```
