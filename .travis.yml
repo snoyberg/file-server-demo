@@ -19,7 +19,15 @@ matrix:
     os: osx
 
 before_install:
-- curl -sSL https://get.haskellstack.org/ | sh
+- mkdir -p ~/.local/bin
+- export PATH=$HOME/.local/bin:$PATH
+- |
+  if [ `uname` = "Darwin" ]
+  then
+    travis_retry curl --insecure -L https://www.stackage.org/stack/osx-x86_64 | tar xz --strip-components=1 --include '*/stack' -C ~/.local/bin
+  else
+    travis_retry curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
+  fi
 
 script:
 - ./FileServer.hs
