@@ -1,0 +1,25 @@
+# Use new container infrastructure to enable caching
+sudo: false
+
+# Choose a lightweight base image; we provide our own build tools.
+language: c
+
+# Caching so the next build will be fast too.
+cache:
+  directories:
+  - $HOME/.ghc
+  - $HOME/.cabal
+  - $HOME/.stack
+
+matrix:
+  include:
+  - compiler: ": #Linux"
+    addons: {apt: {packages: [libgmp,libgmp-dev]}}
+  - compiler: ": #OS X"
+    os: osx
+
+before_install:
+- curl -sSL https://get.haskellstack.org/ | sh
+
+script:
+- ./FileServer.hs
