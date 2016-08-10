@@ -19,6 +19,10 @@ matrix:
     os: osx
 
 before_install:
+# Using compiler above sets CC to an invalid value, so unset it
+- unset CC
+
+# Get the stack executable on the PATH
 - mkdir -p ~/.local/bin
 - export PATH=$HOME/.local/bin:$PATH
 - |
@@ -29,5 +33,6 @@ before_install:
     travis_retry curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
   fi
 
+# Make sure we can run our program
 script:
-- ./FileServer.hs
+- ./FileServer.hs sanity
