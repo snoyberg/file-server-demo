@@ -368,5 +368,8 @@ If you're ready to get deeper into Haskell, I'd recommend:
 FP Complete both supports the open source Haskell ecosystem, as well
 as provides commercial support for those seeking it. If you're
 interested in learning more about how FP Complete can help you and
-your team be more successful in your development and devops work,
-[please contact us for a free consultation](mailto:consulting@fpcomplete.com).
+your team be more successful in your development and devops work, you
+can
+[learn about what services we offer](https://www.fpcomplete.com/dev)
+or
+[contact us for a free consultation](mailto:consulting@fpcomplete.com).
