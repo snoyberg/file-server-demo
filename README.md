@@ -1,7 +1,5 @@
 # File server demo in a single Haskell file
 
-[![Build Status](https://travis-ci.org/snoyberg/file-server-demo.svg?branch=master)](https://travis-ci.org/snoyberg/file-server-demo)
-
 __Sneak peek__: Run `docker run --rm -p 8080:8080
 snoyberg/file-server-demo` and open
 [http://localhost:8080](http://localhost:8080).
